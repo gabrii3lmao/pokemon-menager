@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+
+// Futuramente, para salvar times de usuários diferentes
+model User {
+  id        String @id @default(cuid())
+  email     String @unique
+  teams     Team[]
+}
+
+model Team {
+  id        String   @id @default(cuid())
+  name      String
+  user      User   @relation(fields: [userId], references: [id])
+  userId    String
+  pokemons  PokemonInstance[]
+}
+
+// Este é o "seu" pokémon, com os dados customizados
+model PokemonInstance {
+  id        String @id @default(cuid())
+  nickname  String?
+  species   String  // Ex: "pikachu" (o nome ou ID da PokéAPI)
+  nature    String
+  ability   String
+  heldItem  String?
+
+  // Stats
+
+  evs_hp    Int
+  evs_atk   Int
+  evs_def   Int
+  evs_spa   Int
+  evs_spd   Int
+  evs_spe   Int
+
+  ivs_hp    Int
+  ivs_atk   Int
+  ivs_def   Int
+  ivs_spa   Int
+  ivs_spd   Int
+  ivs_spe   Int
+
+  team    Team   @relation(fields: [teamId], references: [id])
+  teamId  String
+}
